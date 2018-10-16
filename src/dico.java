@@ -1,3 +1,5 @@
 public class dico {
-    public dico(String filename)
+    public dico(String filename){
+
+    }
 }
