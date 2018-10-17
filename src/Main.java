@@ -1,5 +1,14 @@
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 public class Main {
     public static void main(String [] args){
-        System.out.println(DistanceMots.levenshtein("elias","munoz"));
+        try {
+            dico d = new dico(new FileInputStream("dico.txt"));
+            System.out.println(DistanceMots.levenshtein("elias", "munoz"));
+        }
+        catch(FileNotFoundException f){
+            System.out.println(f.getMessage());
+        }
     }
 }
