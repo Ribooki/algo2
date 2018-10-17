@@ -39,8 +39,4 @@ public class DistanceMots {
     private static int min(int a, int b, int c){
         return Math.min(a, Math.min(b, c));
     }
-
-    public static void main(String [] args){
-        System.out.println(levenshtein("elias","munoz"));
-    }
 }
