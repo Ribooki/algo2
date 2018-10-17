@@ -21,10 +21,7 @@ public class dico {
             while (reader.ready()) {
                 wl.add(reader.readLine());
             }
-
             return wl;
-
-
         }
         catch(IOException e){
             System.out.println(e.getMessage());
