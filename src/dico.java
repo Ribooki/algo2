@@ -14,6 +14,14 @@ public class dico {
         return h;
     }
 
+    public boolean dicoVide(){
+        return h.isEmpty();
+    }
+
+    public boolean M_existe(String M){
+        return h.contains(M);
+    }
+
     private HashSet<String> Read_file(FileInputStream f) {
         HashSet<String> wl = new HashSet<>();
         try {
