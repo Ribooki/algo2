@@ -2,12 +2,17 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 public class dico {
     private static HashSet<String> h;
+    private Map<String, ArrayList<String>> trigrammes = new HashMap<>();
+
     public dico(FileInputStream f){
-        h = Read_file(f);
+        h = readFile(f);
     }
 
     public HashSet<String> getH() {
@@ -18,11 +23,11 @@ public class dico {
         return h.isEmpty();
     }
 
-    public static boolean M_existe(String M){
+    public static boolean mExiste(String M){
         return h.contains(M);
     }
 
-    private HashSet<String> Read_file(FileInputStream f) {
+    private HashSet<String> readFile(FileInputStream f) {
         HashSet<String> wl = new HashSet<>();
         try {
             final BufferedReader reader = new BufferedReader(new InputStreamReader(f));
