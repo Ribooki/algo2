@@ -44,14 +44,15 @@ public class dico {
     }
 
     private void createTrigrammesDico(){
-        ArrayList<String> dico = new ArrayList<String>(h);
-        for(String mot : dico){
+        for(String mot : h){
             ArrayList<String> trigrammesMot = createTrigrammesMot(mot);
             for(String trig : trigrammesMot){
                 if(!trigrammes.containsKey(trig)){
                     trigrammes.put(trig, new ArrayList<String>());
                 }
-                trigrammes.get(trig).add(mot);
+                if(!trigrammes.get(trig).contains(mot)) {
+                    trigrammes.get(trig).add(mot);
+                }
             }
         }
     }
