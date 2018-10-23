@@ -5,7 +5,7 @@ import java.io.InputStreamReader;
 import java.util.HashSet;
 
 public class dico {
-    private HashSet<String> h;
+    private static HashSet<String> h;
     public dico(FileInputStream f){
         h = Read_file(f);
     }
@@ -14,11 +14,11 @@ public class dico {
         return h;
     }
 
-    public boolean dicoVide(){
+    public static boolean dicoVide(){
         return h.isEmpty();
     }
 
-    public boolean M_existe(String M){
+    public static boolean M_existe(String M){
         return h.contains(M);
     }
 
@@ -27,7 +27,7 @@ public class dico {
         try {
             final BufferedReader reader = new BufferedReader(new InputStreamReader(f));
             while (reader.ready()) {
-                wl.add(reader.readLine());
+                wl.add("<"+reader.readLine()+">");
             }
             return wl;
         }
