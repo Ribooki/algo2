@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class dico {
     private HashSet<String> h;
-    private Map<String, ArrayList<String>> trigrammes = new HashMap<>();
+    private Map<String, HashSet<String>> trigrammes = new HashMap<>();
 
     public dico(FileInputStream f){
         h = readFile(f);
@@ -48,11 +48,9 @@ public class dico {
             ArrayList<String> trigrammesMot = createTrigrammesMot(mot);
             for(String trig : trigrammesMot){
                 if(!trigrammes.containsKey(trig)){
-                    trigrammes.put(trig, new ArrayList<String>());
+                    trigrammes.put(trig, new HashSet<String>());
                 }
-                if(!trigrammes.get(trig).contains(mot)) {
-                    trigrammes.get(trig).add(mot);
-                }
+                trigrammes.get(trig).add(mot);
             }
         }
     }
