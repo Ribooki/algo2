@@ -8,13 +8,15 @@ import java.util.HashSet;
 import java.util.Map;
 
 public class dico {
-    private HashSet<String> h;
+    private HashSet<String> h;                                              //creation du dictionnaire
     private Map<String, HashSet<String>> trigrammes = new HashMap<>();
 
     public dico(FileInputStream f){
         h = readFile(f);
         createTrigrammesDico();
     }
+
+    /**__________DICTIONNAIRE__________**/
 
     public HashSet<String> getH() {
         return h;
@@ -27,6 +29,8 @@ public class dico {
     public boolean mExiste(String M){
         return h.contains("<" + M + ">");
     }
+
+    /**________LECTURE_DE_FICHIER__________ **/
 
     private HashSet<String> readFile(FileInputStream f) {
         HashSet<String> wl = new HashSet<>();
@@ -43,6 +47,9 @@ public class dico {
         }
     }
 
+
+    /**_______TRIGRAMMES_________ **/
+
     private void createTrigrammesDico(){
         for(String mot : h){
             ArrayList<String> trigrammesMot = createTrigrammesMot(mot);
@@ -56,7 +63,7 @@ public class dico {
     }
 
     private ArrayList<String> createTrigrammesMot(String mot){
-        ArrayList<String> t = new ArrayList<String>();
+        ArrayList<String> t = new ArrayList<>();
         String trigramme;
         for(int i=0 ; i+3<mot.length() ; i++){
             trigramme = mot.substring(i, i+3);
