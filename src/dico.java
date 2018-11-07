@@ -2,10 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 public class dico {
     private HashSet<String> h;                                              //creation du dictionnaire
@@ -71,4 +68,24 @@ public class dico {
         }
         return t;
     }
+
+    private String[] motsTrigrammesCommuns(String mot){
+        String[] mots = new String[100];
+        ArrayList<String> tMot = createTrigrammesMot("<" + mot + ">");
+        HashMap<String, Integer> listeTrigComm = new HashMap<>();
+        for(String tri : tMot){
+            for(String m : trigrammes.get(tri)){
+                if(!listeTrigComm.containsKey(m)){
+                    listeTrigComm.put(m,1);
+                }
+                else{
+                    listeTrigComm.put(m, listeTrigComm.get(m) + 1);
+                }
+            }
+        }
+
+        return mots;
+    }
+
+
 }
