@@ -1,10 +1,11 @@
 import java.util.Comparator;
 import java.util.HashMap;
 
+
 public class valueComparator implements Comparator<String> {
     private HashMap<String, Integer> sorted = new HashMap<>();
 
-    public void setSorted(HashMap<String, Integer> map) {
+    public valueComparator(HashMap<String, Integer> map) {
         sorted.putAll(map);
     }
 

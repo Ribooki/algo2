@@ -7,6 +7,8 @@ import java.util.*;
 public class dico {
     private HashSet<String> h;                                              //creation du dictionnaire
     private Map<String, HashSet<String>> trigrammes = new HashMap<>();
+    private ArrayList<String> motsTrigCommTrie;
+    private ArrayList<String> top5mots;
 
     public dico(FileInputStream f){
         h = readFile(f);
@@ -27,7 +29,7 @@ public class dico {
         return h.contains("<" + M + ">");
     }
 
-    /**________LECTURE_DE_FICHIER__________ **/
+    /**________SECTION_LECTURE_FICHIER__________ **/
 
     private HashSet<String> readFile(FileInputStream f) {
         HashSet<String> wl = new HashSet<>();
@@ -45,7 +47,7 @@ public class dico {
     }
 
 
-    /**_______TRIGRAMMES_________ **/
+    /**_______SECTION_TRIGRAMMES_________ **/
 
     private void createTrigrammesDico(){
         for(String mot : h){
@@ -62,30 +64,64 @@ public class dico {
     private ArrayList<String> createTrigrammesMot(String mot){
         ArrayList<String> t = new ArrayList<>();
         String trigramme;
-        for(int i=0 ; i+3<mot.length() ; i++){
+        for(int i=0 ; i+2<mot.length() ; i++){
             trigramme = mot.substring(i, i+3);
             t.add(trigramme);
         }
         return t;
     }
 
-    private String[] motsTrigrammesCommuns(String mot){
-        String[] mots = new String[100];
-        ArrayList<String> tMot = createTrigrammesMot("<" + mot + ">");
-        HashMap<String, Integer> listeTrigComm = new HashMap<>();
-        for(String tri : tMot){
-            for(String m : trigrammes.get(tri)){
-                if(!listeTrigComm.containsKey(m)){
-                    listeTrigComm.put(m,1);
-                }
-                else{
-                    listeTrigComm.put(m, listeTrigComm.get(m) + 1);
+    /**__________SECTION_TRIGRAMMES_COMMUNS___________**/
+
+    private void motsTrigrammesCommuns(String mot){
+
+            ArrayList<String> tMot = createTrigrammesMot("<" + mot + ">"); // on crée les trigramme du mot
+            HashMap<String, Integer> listeTrigComm = new HashMap<>(); //HashMap<mots, nbTrigCommun>
+            for (String tri : tMot) {
+                if(trigrammes.containsKey(tri)) {
+                    for (String m : trigrammes.get(tri)) {
+                        if (!listeTrigComm.containsKey(m)) {
+                            listeTrigComm.put(m, 1);
+                        } else {
+                            listeTrigComm.put(m, listeTrigComm.get(m) + 1);
+                        }
+                    }
                 }
             }
-        }
-
-        return mots;
+            motsTrigCommTrie = triHashMap(listeTrigComm);
     }
 
+    private ArrayList<String> triHashMap(HashMap<String, Integer> map){
+        Comparator<String> compareAvecValeur = new valueComparator(map);
+        TreeMap<String, Integer> res = new TreeMap<>(compareAvecValeur);
+        res.putAll(map);
+        ArrayList<String> convert = new ArrayList<>(res.keySet());
+        return convert;
+    }
 
+    public void get5TopMotsDistance(String mot){
+        HashMap<String, Integer> levi = new HashMap<>();
+        motsTrigrammesCommuns(mot);
+        if(100 < motsTrigCommTrie.size()) {
+            for (int i = 0; i < 100; i++) {
+                levi.put(motsTrigCommTrie.get(i), DistanceMots.levenshtein(mot, motsTrigCommTrie.get(i)));
+            }
+        }
+        else{
+            for (int i = 0; i < motsTrigCommTrie.size(); i++) {
+                levi.put(motsTrigCommTrie.get(i),DistanceMots.levenshtein(mot, motsTrigCommTrie.get(i)));
+            }
+        }
+        top5mots = triHashMap(levi);
+        affiche5premiersMots(mot);
+    }
+
+    public void affiche5premiersMots(String mot){
+        System.out.print(mot + " : ");
+        for(int i = top5mots.size()-1; i >= top5mots.size()-5; i--){
+            System.out.print(top5mots.get(i));
+        }
+        System.out.println();
+    }
 }
+
