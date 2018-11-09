@@ -4,12 +4,9 @@ public class Main {
     public static void main(String [] args){
         try {
             dico d = new dico(new FileInputStream("Ressources/dico.txt"));
-            System.out.println(d.dicoVide());
-            System.out.println(DistanceMots.levenshtein("elias", "munoz"));
             final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("Ressources/fautes.txt")));
             long startTime = System.nanoTime();
             while (reader.ready()) {
-
                 d.get5TopMotsDistance(reader.readLine());
             }
             long endTime = System.nanoTime();

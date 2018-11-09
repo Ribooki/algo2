@@ -1,19 +1,26 @@
-import java.util.Comparator;
-import java.util.HashMap;
+import java.util.*;
 
 
-public class valueComparator implements Comparator<String> {
-    private HashMap<String, Integer> sorted = new HashMap<>();
+public class valueComparator {
 
-    public valueComparator(HashMap<String, Integer> map) {
-        sorted.putAll(map);
-    }
+    public static HashSet<String> sortByValue(Map<String, Integer> map) {
+        List<Map.Entry<String, Integer>> trieMoiLaMap = new LinkedList<Map.Entry<String, Integer>>(map.entrySet());
 
-    @Override
-    public int compare(String s1, String s2) {
-        if(sorted.get(s1) >= sorted.get(s2))
-            return -1;
-        else
-            return 1;
+        Collections.sort(trieMoiLaMap, new Comparator<Map.Entry<String, Integer>>() {
+            @Override
+            public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+                return o2.getValue().compareTo(o1.getValue());
+            }
+        });
+
+        Map<String, Integer> laMapEstTrie = new LinkedHashMap<String, Integer>();
+        HashSet<String> h = new LinkedHashSet<>();
+
+        for (Map.Entry<String, Integer> entry : trieMoiLaMap)
+        {
+            h.add(entry.getKey());
+        }
+
+        return h;
     }
 }

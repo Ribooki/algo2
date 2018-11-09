@@ -7,8 +7,8 @@ import java.util.*;
 public class dico {
     private HashSet<String> h;                                              //creation du dictionnaire
     private Map<String, HashSet<String>> trigrammes = new HashMap<>();
-    private ArrayList<String> motsTrigCommTrie;
-    private ArrayList<String> top5mots;
+    private HashSet<String> motsTrigCommTrie;
+    private HashSet<String> top5mots;
 
     public dico(FileInputStream f){
         h = readFile(f);
@@ -88,38 +88,37 @@ public class dico {
                     }
                 }
             }
-            motsTrigCommTrie = triHashMap(listeTrigComm);
-    }
-
-    private ArrayList<String> triHashMap(HashMap<String, Integer> map){
-        Comparator<String> compareAvecValeur = new valueComparator(map);
-        TreeMap<String, Integer> res = new TreeMap<>(compareAvecValeur);
-        res.putAll(map);
-        ArrayList<String> convert = new ArrayList<>(res.keySet());
-        return convert;
+            motsTrigCommTrie = valueComparator.sortByValue(listeTrigComm);
     }
 
     public void get5TopMotsDistance(String mot){
         HashMap<String, Integer> levi = new HashMap<>();
         motsTrigrammesCommuns(mot);
+        int i = 0;
         if(100 < motsTrigCommTrie.size()) {
-            for (int i = 0; i < 100; i++) {
-                levi.put(motsTrigCommTrie.get(i), DistanceMots.levenshtein(mot, motsTrigCommTrie.get(i)));
+            for (String key : motsTrigCommTrie) {
+                if(i<100) {
+                    levi.put(key, (-1) * DistanceMots.levenshtein(mot, key));
+                    i++;
+                }
+                else break;
             }
         }
         else{
-            for (int i = 0; i < motsTrigCommTrie.size(); i++) {
-                levi.put(motsTrigCommTrie.get(i),DistanceMots.levenshtein(mot, motsTrigCommTrie.get(i)));
+            for (String key : motsTrigCommTrie) {
+                levi.put(key, (-1) * DistanceMots.levenshtein(mot, key));
             }
         }
-        top5mots = triHashMap(levi);
+        top5mots = valueComparator.sortByValue(levi);
         affiche5premiersMots(mot);
     }
 
     public void affiche5premiersMots(String mot){
         System.out.print(mot + " : ");
-        for(int i = top5mots.size()-1; i >= top5mots.size()-5; i--){
-            System.out.print(top5mots.get(i));
+        int i=0;
+        for(String e: top5mots){
+            if (i++ == 5) break;
+            System.out.println(e);
         }
         System.out.println();
     }
