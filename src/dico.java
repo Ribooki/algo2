@@ -7,8 +7,8 @@ import java.util.*;
 public class dico {
     private HashSet<String> h;                                              //creation du dictionnaire
     private Map<String, HashSet<String>> trigrammes = new HashMap<>();
-    private HashSet<String> motsTrigCommTrie;
-    private HashSet<String> top5mots;
+    private ArrayList<String> motsTrigCommTrie;
+    private ArrayList<String> top5mots;
 
     public dico(FileInputStream f){
         h = readFile(f);
@@ -94,19 +94,14 @@ public class dico {
     public void get5TopMotsDistance(String mot){
         HashMap<String, Integer> levi = new HashMap<>();
         motsTrigrammesCommuns(mot);
-        int i = 0;
-        if(100 < motsTrigCommTrie.size()) {
-            for (String key : motsTrigCommTrie) {
-                if(i<100) {
-                    levi.put(key, (-1) * DistanceMots.levenshtein(mot, key));
-                    i++;
-                }
-                else break;
+        if(100 > motsTrigCommTrie.size()) {
+            for (int i=0; i<motsTrigCommTrie.size(); i++) {
+                    levi.put(motsTrigCommTrie.get(i), (-1) * DistanceMots.levenshtein(mot, motsTrigCommTrie.get(i)));
             }
         }
         else{
-            for (String key : motsTrigCommTrie) {
-                levi.put(key, (-1) * DistanceMots.levenshtein(mot, key));
+            for (int i=0; i<100; i++) {
+                levi.put(motsTrigCommTrie.get(i), (-1) * DistanceMots.levenshtein(mot, motsTrigCommTrie.get(i)));
             }
         }
         top5mots = valueComparator.sortByValue(levi);
@@ -115,10 +110,8 @@ public class dico {
 
     public void affiche5premiersMots(String mot){
         System.out.print(mot + " : ");
-        int i=0;
-        for(String e: top5mots){
-            if (i++ == 5) break;
-            System.out.println(e);
+        for(int i=0; i<5; i++){
+            System.out.print(top5mots.get(i));
         }
         System.out.println();
     }

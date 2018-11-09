@@ -3,7 +3,7 @@ import java.util.*;
 
 public class valueComparator {
 
-    public static HashSet<String> sortByValue(Map<String, Integer> map) {
+    public static ArrayList<String> sortByValue(Map<String, Integer> map) {
         List<Map.Entry<String, Integer>> trieMoiLaMap = new LinkedList<Map.Entry<String, Integer>>(map.entrySet());
 
         Collections.sort(trieMoiLaMap, new Comparator<Map.Entry<String, Integer>>() {
@@ -13,14 +13,13 @@ public class valueComparator {
             }
         });
 
-        Map<String, Integer> laMapEstTrie = new LinkedHashMap<String, Integer>();
-        HashSet<String> h = new LinkedHashSet<>();
+        ArrayList<String> sortedMap = new ArrayList<>();
 
         for (Map.Entry<String, Integer> entry : trieMoiLaMap)
         {
-            h.add(entry.getKey());
+            sortedMap.add(entry.getKey());
         }
 
-        return h;
+        return sortedMap;
     }
 }
