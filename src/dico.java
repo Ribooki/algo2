@@ -7,8 +7,8 @@ import java.util.*;
 public class dico {
     private HashSet<String> h;                                              //creation du dictionnaire
     private Map<String, HashSet<String>> trigrammes = new HashMap<>();
-    private ArrayList<String> motsTrigCommTrie;
-    private ArrayList<String> top5mots;
+    private String[] motsTrigCommTrie;
+    private String[] top5mots;
 
     public dico(FileInputStream f){
         h = readFile(f);
@@ -54,7 +54,7 @@ public class dico {
             ArrayList<String> trigrammesMot = createTrigrammesMot(mot);
             for(String trig : trigrammesMot){
                 if(!trigrammes.containsKey(trig)){
-                    trigrammes.put(trig, new HashSet<String>());
+                    trigrammes.put(trig, new HashSet<>());
                 }
                 trigrammes.get(trig).add(mot);
             }
@@ -88,30 +88,25 @@ public class dico {
                     }
                 }
             }
-            motsTrigCommTrie = valueComparator.sortByValue(listeTrigComm);
+            motsTrigCommTrie = valueComparator.sortByValue(listeTrigComm, 100);
     }
 
     public void get5TopMotsDistance(String mot){
         HashMap<String, Integer> levi = new HashMap<>();
         motsTrigrammesCommuns(mot);
-        if(100 > motsTrigCommTrie.size()) {
-            for (int i=0; i<motsTrigCommTrie.size(); i++) {
-                    levi.put(motsTrigCommTrie.get(i), (-1) * DistanceMots.levenshtein(mot, motsTrigCommTrie.get(i)));
-            }
+        for (int i=0; i<motsTrigCommTrie.length; i++) {
+            if (motsTrigCommTrie[i] == null)
+                break;
+            levi.put(motsTrigCommTrie[i], (-1) * DistanceMots.levenshtein(mot, motsTrigCommTrie[i]));
         }
-        else{
-            for (int i=0; i<100; i++) {
-                levi.put(motsTrigCommTrie.get(i), (-1) * DistanceMots.levenshtein(mot, motsTrigCommTrie.get(i)));
-            }
-        }
-        top5mots = valueComparator.sortByValue(levi);
+        top5mots = valueComparator.sortByValue(levi, 5);
         affiche5premiersMots(mot);
     }
 
     public void affiche5premiersMots(String mot){
         System.out.print(mot + " : ");
         for(int i=0; i<5; i++){
-            System.out.print(top5mots.get(i));
+            System.out.print(top5mots[i]);
         }
         System.out.println();
     }
