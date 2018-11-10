@@ -20,7 +20,6 @@ public class valueComparator {
             sortedMap[i++] = entry.getKey();
             if (i == size) break;
         }
-
         return sortedMap;
     }
 }
