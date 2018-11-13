@@ -3,12 +3,15 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class dico {
     private HashSet<String> h;                                              //creation du dictionnaire
     private Map<String, HashSet<String>> trigrammes = new HashMap<>();
     private String[] motsTrigCommTrie;
     private String[] top5mots;
+    Lock lock = new ReentrantLock();
 
     public dico(FileInputStream f){
         h = readFile(f);
@@ -51,7 +54,7 @@ public class dico {
 
     private void createTrigrammesDico(){
         for(String mot : h){
-            ArrayList<String> trigrammesMot = createTrigrammesMot(mot);
+            String[] trigrammesMot = createTrigrammesMot(mot);
             for(String trig : trigrammesMot){
                 if(!trigrammes.containsKey(trig)){
                     trigrammes.put(trig, new HashSet<>());
@@ -61,12 +64,12 @@ public class dico {
         }
     }
 
-    private ArrayList<String> createTrigrammesMot(String mot){
-        ArrayList<String> t = new ArrayList<>();
+    private String[] createTrigrammesMot(String mot){
+        String[] t = new String[mot.length() - 2];
         String trigramme;
         for(int i=0 ; i+2<mot.length() ; i++){
             trigramme = mot.substring(i, i+3);
-            t.add(trigramme);
+            t[i] = trigramme;
         }
         return t;
     }
@@ -75,7 +78,7 @@ public class dico {
 
     private void motsTrigrammesCommuns(String mot){
 
-            ArrayList<String> tMot = createTrigrammesMot("<" + mot + ">"); // on crée les trigramme du mot
+            String[] tMot = createTrigrammesMot("<" + mot + ">"); // on crée les trigramme du mot
             HashMap<String, Integer> listeTrigComm = new HashMap<>(); //HashMap<mots, nbTrigCommun>
             for (String tri : tMot) {
                 if(trigrammes.containsKey(tri)) {
