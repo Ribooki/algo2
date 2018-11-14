@@ -8,20 +8,21 @@ public class Main {
         try {
             dico d = new dico(new FileInputStream("Ressources/dico.txt"));
             final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("Ressources/fautes.txt")));
-            ExecutorService exe = Executors.newFixedThreadPool(4);
+            ExecutorService exe1 = Executors.newFixedThreadPool(4);
             long startTime = System.nanoTime();
             while (reader.ready()) {
-                exe.submit(new threadM(d, reader.readLine()));
-                //d.get5TopMotsDistance(reader.readLine());
+                exe1.submit(new threadM(d, reader.readLine()));
             }
             try{
-                exe.shutdown();
-                exe.awaitTermination(1, TimeUnit.HOURS);
+                exe1.shutdown();
+                exe1.awaitTermination(1, TimeUnit.HOURS);
             } catch (InterruptedException ie){
                 System.out.println(ie.getMessage());
             }
             long endTime = System.nanoTime();
-            System.out.println("Durée : " + ((endTime - startTime) * Math.pow(10, -9)) + "s");
+            double secondes = ((endTime - startTime) * Math.pow(10, -9));
+            double resultat =(double) Math.round(secondes * 100)/100;
+            System.out.println("\u001B[36m" +"Durée : " + resultat + "s");
 
         }
         catch(FileNotFoundException f){

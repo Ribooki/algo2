@@ -2,19 +2,23 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class dico {
     private HashSet<String> h;                                              //creation du dictionnaire
-    private Map<String, HashSet<String>> trigrammes = new HashMap<>();
+    private Map<String, HashSet<String>> trigrammes;
     private String[] motsTrigCommTrie;
     private String[] top5mots;
-    Lock lock = new ReentrantLock();
+    private Lock lock;
 
     public dico(FileInputStream f){
+        lock = new ReentrantLock();
         h = readFile(f);
+        trigrammes = new HashMap<>();
         createTrigrammesDico();
     }
 
@@ -91,7 +95,12 @@ public class dico {
                     }
                 }
             }
-            motsTrigCommTrie = valueComparator.sortByValue(listeTrigComm, 100);
+            lock.lock();
+            try {
+                motsTrigCommTrie = valueComparator.sortByValue(listeTrigComm, 100);
+            } finally {
+                lock.unlock();
+            }
     }
 
     public void get5TopMotsDistance(String mot){
@@ -102,16 +111,27 @@ public class dico {
                 break;
             levi.put(motsTrigCommTrie[i], (-1) * DistanceMots.levenshtein(mot, motsTrigCommTrie[i]));
         }
-        top5mots = valueComparator.sortByValue(levi, 5);
+        lock.lock();
+        try {
+            top5mots = valueComparator.sortByValue(levi, 5);
+        } finally {
+            lock.unlock();
+        }
         affiche5premiersMots(mot);
     }
 
     public void affiche5premiersMots(String mot){
-        System.out.print(mot + " : ");
-        for(int i=0; i<5; i++){
-            System.out.print(top5mots[i]);
+        lock.lock();
+        try {
+
+            System.out.print(mot + " : ");
+            for (int i = 0; i < 5; i++) {
+                System.out.print(top5mots[i]);
+            }
+            System.out.println();
+        } finally {
+            lock.unlock();
         }
-        System.out.println();
     }
 }
 
